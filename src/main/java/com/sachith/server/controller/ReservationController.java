@@ -1,35 +1,62 @@
 package com.sachith.server.controller;
 
 
+import com.sachith.server.dto.ReservationDTO;
+import com.sachith.server.dto.ResponseDTO;
 import com.sachith.server.model.Reservation;
-import com.sachith.server.model.Slot;
+
+import com.sachith.server.model.Transaction;
 import com.sachith.server.model.User;
-import com.sachith.server.repository.ReservationRepository;
-import com.sachith.server.repository.SlotRepository;
+import com.sachith.server.service.ReservationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/reservation")
+@RequestMapping("/api/reservations")
 public class ReservationController {
 
+    Logger logger = LoggerFactory.getLogger(ReservationController.class);
+
     @Autowired
-    private ReservationRepository reservationRepository;
+    private ReservationService reservationService;
 
     @PostMapping()
-    public Reservation create(@RequestBody Reservation reservation) {
-        try {
-            return reservationRepository.save(reservation);
-        } catch (Exception e) {
-            return null;
+    public ResponseDTO create(@RequestBody ReservationDTO reservationDto) {
+        ResponseDTO responseDTO = new ResponseDTO();
+
+        Object data  = reservationService.create(reservationDto);
+        responseDTO.setData(data);
+        if(data!=null){
+            responseDTO.setStatus("SUCCESS");
+            responseDTO.setDescription("Successful");
+        } else{
+            responseDTO.setStatus("ERROR");
+            responseDTO.setDescription("Error");
         }
+        return responseDTO;
+
     }
 
     @GetMapping()
-    public List<Reservation> readAll() {
+    public ResponseEntity<List<Reservation>> readAll() {
+        try{
+            List<Reservation> list = reservationService.readAll();
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception ex){
+            logger.error("",ex);
+            return new ResponseEntity<>(null, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
 
-        return reservationRepository.findAll();
+    @PatchMapping("/{id}/transaction")
+    public Reservation updateReservationTransactionById(@PathVariable Long id, @RequestBody Transaction transaction) {
+        return reservationService.updateReservationTransactionById(id, transaction);
     }
 }

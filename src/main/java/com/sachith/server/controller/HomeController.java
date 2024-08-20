@@ -10,6 +10,6 @@ public class HomeController {
 
     @GetMapping()
     public String greeting(){
-        return "Hello world";
+        return "Wel come to Book with Me Application";
     }
 }

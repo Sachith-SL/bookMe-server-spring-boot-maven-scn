@@ -4,24 +4,25 @@ import com.sachith.server.model.Slot;
 import com.sachith.server.model.User;
 import com.sachith.server.repository.SlotRepository;
 import com.sachith.server.repository.UserRepository;
+import com.sachith.server.service.SlotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/slot")
+@RequestMapping("/api/slots")
 public class SlotController {
     @Autowired
-    private SlotRepository slotRepository;
+    private SlotService slotService;
 
     @PostMapping()
     public Slot create(@RequestBody Slot slot) {
-        return slotRepository.save(slot);
+        return slotService.create(slot);
     }
 
     @GetMapping()
     public List<Slot> readAll() {
-        return slotRepository.findAll();
+        return slotService.readAll();
     }
 }

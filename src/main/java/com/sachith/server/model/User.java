@@ -1,16 +1,24 @@
 package com.sachith.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "t_user")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =   CascadeType.ALL)
+    @JsonIgnore
+    private List<Reservation> reservationList;
+
     String mobile;
     String role; //(ADMIN,CUSTOMER)
 
@@ -44,5 +52,13 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
     }
 }
