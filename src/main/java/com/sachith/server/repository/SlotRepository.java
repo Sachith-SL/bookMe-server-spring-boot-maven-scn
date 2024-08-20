@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SlotRepository extends JpaRepository<Slot, Long> {
-    public List<Slot> findByAvailable(Boolean isAvailable);
+    public List<Slot> findByIsAvailable(Boolean isAvailable);
 }
