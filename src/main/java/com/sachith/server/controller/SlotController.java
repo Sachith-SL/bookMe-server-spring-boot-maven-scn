@@ -25,4 +25,10 @@ public class SlotController {
     public List<Slot> readAll() {
         return slotService.readAll();
     }
+
+    @GetMapping("/available")
+    public List<Slot> availableSlotsByDate(@RequestParam(value = "date", required = false) String date) {
+//        todo
+        return slotService.readAll();
+    }
 }

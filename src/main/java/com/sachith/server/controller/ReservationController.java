@@ -59,4 +59,39 @@ public class ReservationController {
     public Reservation updateReservationTransactionById(@PathVariable Long id, @RequestBody Transaction transaction) {
         return reservationService.updateReservationTransactionById(id, transaction);
     }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<Reservation>> reservationByUserId(@PathVariable Long id) {
+        //todo
+        try{
+            List<Reservation> list = reservationService.readAll();
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception ex){
+            logger.error("",ex);
+            return new ResponseEntity<>(null, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<Reservation>> reservationByStatus(@PathVariable String status) {
+        //todo
+        try{
+            List<Reservation> list = reservationService.readAll();
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception ex){
+            logger.error("",ex);
+            return new ResponseEntity<>(null, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    @PatchMapping("/status/{status}")
+    public ResponseEntity<List<Reservation>> updateReservationByStatus(@PathVariable String status) {
+        //todo
+        try{
+            List<Reservation> list = reservationService.readAll();
+            return new ResponseEntity<>(list, HttpStatus.OK);
+        } catch (Exception ex){
+            logger.error("",ex);
+            return new ResponseEntity<>(null, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
 }

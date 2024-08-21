@@ -30,4 +30,25 @@ public class TransactionController {
         }
 
     }
+
+    @GetMapping("/{status}")
+    public List<Transaction> transactionByStatus(@PathVariable String status) {
+        try{
+            return transactionService.readAll();
+        } catch (Exception ex){
+            logger.error("",ex);
+            return null;
+        }
+
+    }
+
+    @GetMapping("/list/{status}")
+    public List<Transaction> transactionByStatusForGivenStartDateAndEndDate(@PathVariable String status, @RequestParam(value = "start_date", required = false) String startDate, @RequestParam(value = "end_date", required = false) String endDate) {
+        try {
+            return transactionService.readAll();
+        } catch (Exception ex) {
+            logger.error("", ex);
+            return null;
+        }
+    }
 }
