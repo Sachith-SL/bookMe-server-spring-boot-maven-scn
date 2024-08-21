@@ -47,7 +47,7 @@ public class TransactionController {
     public List<Transaction> transactionByStatusForGivenStartDateAndEndDate(@PathVariable String status, @RequestParam(value = "start_date", required = false) String startDate, @RequestParam(value = "end_date", required = false) String endDate) {
         //todo
         try {
-            return transactionService.readAll();
+            return transactionService.transactionByStatusForGivenStartDateAndEndDate(status,startDate,endDate);
         } catch (Exception ex) {
             logger.error("", ex);
             return null;

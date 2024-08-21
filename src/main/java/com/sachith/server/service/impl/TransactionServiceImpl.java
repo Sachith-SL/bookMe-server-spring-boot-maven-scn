@@ -8,12 +8,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    Logger log = LoggerFactory.getLogger(TransactionServiceImpl.class);
+    Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
     @Autowired
     private TransactionRepository transactionRepository;
@@ -23,7 +25,7 @@ public class TransactionServiceImpl implements TransactionService {
         try {
             return transactionRepository.save(transaction);
         } catch (Exception e){
-            log.error("",e);
+            logger.error("",e);
             return null;
         }
 
@@ -37,5 +39,18 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> transactionByStatus(String status) {
         return transactionRepository.findByStatus(status);
+    }
+
+    @Override
+    public List<Transaction> transactionByStatusForGivenStartDateAndEndDate(String status, String startDateString, String endDateString) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");//2024-08-12
+            LocalDate startDate = LocalDate.parse(startDateString, formatter);
+            LocalDate endDate = LocalDate.parse(endDateString, formatter);
+            return transactionRepository.findByDateBetweenAndStatus(startDate,endDate,status);
+        } catch (Exception ex){
+            logger.error("",ex);
+            return null;
+        }
     }
 }
