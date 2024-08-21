@@ -33,4 +33,9 @@ public class TransactionServiceImpl implements TransactionService {
     public List<Transaction> readAll() {
         return transactionRepository.findAll();
     }
+
+    @Override
+    public List<Transaction> transactionByStatus(String status) {
+        return transactionRepository.findByStatus(status);
+    }
 }

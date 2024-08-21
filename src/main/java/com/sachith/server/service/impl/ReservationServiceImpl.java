@@ -5,9 +5,13 @@ import com.sachith.server.model.*;
 import com.sachith.server.repository.ReservationRepository;
 import com.sachith.server.repository.ReservationSlotRepository;
 import com.sachith.server.repository.SlotRepository;
+import com.sachith.server.repository.UserRepository;
 import com.sachith.server.service.ReservationService;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,6 +21,8 @@ import java.util.Optional;
 @Service
 public class ReservationServiceImpl implements ReservationService {
 
+    Logger logger = LoggerFactory.getLogger(ReservationServiceImpl.class);
+
     @Autowired
     private ReservationRepository reservationRepository;
 
@@ -25,6 +31,9 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Autowired
     private ReservationSlotRepository reservationSlotRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     @Transactional
@@ -103,6 +112,52 @@ public class ReservationServiceImpl implements ReservationService {
         }
         return null;
 
+    }
+
+    @Override
+    public List<Reservation> reservationByUserId(Long id) {
+        List<Reservation> reservationList = new ArrayList<>();
+        try {
+            Optional<User> optionalUser = userRepository.findById(id);
+            User user = optionalUser.isPresent()? optionalUser.get() : null;
+
+            if (user !=null){
+                reservationList =reservationRepository.findByUser(user);
+            }
+
+        } catch (Exception ex){
+            logger.error("",ex);
+        }
+
+
+        return reservationList;
+    }
+
+    @Override
+    public List<Reservation> reservationByStatus(String status) {
+        List<Reservation> reservationList = new ArrayList<>();
+        try{
+            reservationList = reservationRepository.findByStatus(status);
+        } catch (Exception ex){
+            logger.error("",ex);
+        }
+        return reservationList;
+    }
+
+    @Override
+    public Reservation updateReservationByStatus(Long id, String status) {
+        Reservation updatedReservation = null;
+        try {
+            Optional<Reservation> optionalReservation = reservationRepository.findById(id);
+            if (optionalReservation.isPresent()) {
+                Reservation oldReservation = optionalReservation.get();
+                oldReservation.setStatus(status);
+                updatedReservation = reservationRepository.save(oldReservation);
+            }
+        } catch (Exception ex) {
+            logger.error("", ex);
+        }
+        return updatedReservation;
     }
 
 

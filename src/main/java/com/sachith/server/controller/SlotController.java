@@ -28,7 +28,7 @@ public class SlotController {
 
     @GetMapping("/available")
     public List<Slot> availableSlotsByDate(@RequestParam(value = "date", required = false) String date) {
-//        todo
-        return slotService.readAll();
+//
+        return slotService.availableSlotsByDate(date);
     }
 }

@@ -35,7 +35,7 @@ public class TransactionController {
     public List<Transaction> transactionByStatus(@PathVariable String status) {
         //todo
         try{
-            return transactionService.readAll();
+            return transactionService.transactionByStatus(status);
         } catch (Exception ex){
             logger.error("",ex);
             return null;
