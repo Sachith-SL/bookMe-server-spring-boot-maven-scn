@@ -14,13 +14,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     String name;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade =   CascadeType.ALL)
-    @JsonIgnore
-    private List<Reservation> reservationList;
-
     String mobile;
-    String role; //(ADMIN,CUSTOMER)
+    Character isLoyalty; //(Y,N)
 
     public Long getId() {
         return id;
@@ -46,19 +41,11 @@ public class User {
         this.mobile = mobile;
     }
 
-    public String getRole() {
-        return role;
+    public Character getIsLoyalty() {
+        return isLoyalty;
     }
 
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public List<Reservation> getReservationList() {
-        return reservationList;
-    }
-
-    public void setReservationList(List<Reservation> reservationList) {
-        this.reservationList = reservationList;
+    public void setIsLoyalty(Character isLoyalty) {
+        this.isLoyalty = isLoyalty;
     }
 }

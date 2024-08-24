@@ -10,16 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin()
 @RequestMapping("/api/users")
 public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @PostMapping()
-    public User create(@RequestBody User user) {
-        return userService.create(user);
-    }
 
     @GetMapping()
     public List<User> readAll() {
@@ -27,18 +23,13 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public Optional<User> readById(@PathVariable Long id) {
+    public User readById(@PathVariable Long id) {
         return userService.readById(id);
     }
 
-    @GetMapping("/name")
-    public List<User> readByName(@RequestParam(value = "name", required = false) String name) {
-        return userService.readByName(name);
-    }
-
-    @GetMapping("/count")
-    public Long readCountByName(@RequestParam(value = "name", required = false) String name) {
-        return userService.readCountByName(name);
+    @PostMapping()
+    public User create(@RequestBody User user) {
+        return userService.create(user);
     }
 
     @PutMapping("/{id}")
@@ -46,15 +37,17 @@ public class UserController {
         return userService.updateById(id, user);
     }
 
+    @PatchMapping("/{id}/mobile")
+    public User updateMobileById(@PathVariable Long id, @RequestParam(value = "mobile", required = false) String mobile) {
+        return userService.updateMobileById(id, mobile);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable Long id) {
         userService.deleteById(id);
     }
 
-    @PatchMapping("/{id}/mobile")
-    public User updateMobileById(@PathVariable Long id, @RequestParam(value = "mobile", required = false) String mobile) {
-        return userService.updateMobileById(id, mobile);
-    }
+
 
 
 }
