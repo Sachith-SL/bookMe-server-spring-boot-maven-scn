@@ -9,21 +9,19 @@ import java.util.Optional;
 
 public interface UserService {
 
-    public User create(User user) ;
-
     public List<User> readAll() ;
 
-    public Optional<User> readById(Long id) ;
+    public User readById(Long id) ;
 
-    public List<User> readByName(String name) ;
-
-    public Long readCountByName(String name) ;
+    public User create(User user) ;
 
     public User updateById(Long id,User user) ;
 
+    public User updateMobileById(Long id,String mobile) ;
+
     public void deleteById(Long id) ;
 
-    public User updateMobileById(Long id,String mobile) ;
+
 
 
 }
