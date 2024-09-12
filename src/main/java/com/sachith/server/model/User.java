@@ -20,7 +20,9 @@ public class User {
     private List<Reservation> reservationList;
 
     String mobile;
+    Character isLoyalty; // ("N","Y")
     String role; //(ADMIN,CUSTOMER)
+    String password;
 
     public Long getId() {
         return id;
@@ -60,5 +62,21 @@ public class User {
 
     public void setReservationList(List<Reservation> reservationList) {
         this.reservationList = reservationList;
+    }
+
+    public Character getIsLoyalty() {
+        return isLoyalty;
+    }
+
+    public void setIsLoyalty(Character isLoyalty) {
+        this.isLoyalty = isLoyalty;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

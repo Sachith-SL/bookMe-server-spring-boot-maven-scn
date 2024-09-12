@@ -11,7 +11,6 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,12 +39,17 @@ public class ReservationServiceImpl implements ReservationService {
     public Reservation create(ReservationDTO reservationDto) {
         try {
             Boolean bookingSlotsAvalability =false;
-            User user = reservationDto.getUser();
-            List<Slot> slots = reservationDto.getSlots();
+            Optional<User> user = userRepository.findById(reservationDto.getUserId());
+            List<Slot> newSlots = new ArrayList<>();
+            for(Long id:reservationDto.getSlotsIds()){
+                Optional<Slot> slot = slotRepository.findById(id);
+                newSlots.add(slot.get());
+            }
+
             List<Slot> bookingSlots = new ArrayList<>();
             Integer totalAmount = 0;
 
-            for(Slot slot: slots){
+            for(Slot slot: newSlots){
                 if(slot.getId() != null){
                     Slot existingSlot = slotRepository.findById(slot.getId()).get();
                     if(existingSlot.getAvailable() == true && existingSlot.getDate().equals(reservationDto.getDate())){
@@ -63,7 +67,7 @@ public class ReservationServiceImpl implements ReservationService {
             if(reservationDto.getTransaction() ==null){
                 reservation.setTransaction(new Transaction());
             }
-            reservation.setUser(user);
+            reservation.setUser(user.get());
             reservation.setDate(reservationDto.getDate());
             reservation.setAmount(totalAmount);
             reservation.setStatus(reservationDto.getStatus());

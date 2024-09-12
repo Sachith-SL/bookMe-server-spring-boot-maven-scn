@@ -19,6 +19,7 @@ public class Slot {
     private List<ReservationSlot> reservationSlots;
 
     LocalDate date;
+    Integer slotIndex;
     LocalTime startTime;
     LocalTime endTime;
     Integer unitPrice;
@@ -82,5 +83,11 @@ public class Slot {
         isAvailable = available;
     }
 
+    public Integer getSlotIndex() {
+        return slotIndex;
+    }
 
+    public void setSlotIndex(Integer slotIndex) {
+        this.slotIndex = slotIndex;
+    }
 }

@@ -12,8 +12,8 @@ import java.util.List;
 public class ReservationDTO {
 
     private Transaction transaction;
-    private  User user;
-    private List<Slot> slots;
+    private  Long userId;
+    private List<Long> slotsIds;
     private LocalDate date;
     private Integer amount;
     private String status;
@@ -24,22 +24,6 @@ public class ReservationDTO {
 
     public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<Slot> getSlots() {
-        return slots;
-    }
-
-    public void setSlots(List<Slot> slots) {
-        this.slots = slots;
     }
 
     public LocalDate getDate() {
@@ -64,5 +48,21 @@ public class ReservationDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public List<Long> getSlotsIds() {
+        return slotsIds;
+    }
+
+    public void setSlotsIds(List<Long> slotsIds) {
+        this.slotsIds = slotsIds;
     }
 }

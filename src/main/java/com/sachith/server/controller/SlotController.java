@@ -1,5 +1,6 @@
 package com.sachith.server.controller;
 
+import com.sachith.server.dto.DateDto;
 import com.sachith.server.model.Slot;
 import com.sachith.server.model.User;
 import com.sachith.server.repository.SlotRepository;
@@ -12,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/slots")
+@CrossOrigin()
 public class SlotController {
     @Autowired
     private SlotService slotService;
@@ -19,6 +21,11 @@ public class SlotController {
     @PostMapping()
     public Slot create(@RequestBody Slot slot) {
         return slotService.create(slot);
+    }
+
+    @PostMapping("/date")
+    public String createAllSlotsForGivenDate(@RequestBody DateDto dateDto) {
+        return slotService.createAllSlotsForGivenDate(dateDto);
     }
 
     @GetMapping()
