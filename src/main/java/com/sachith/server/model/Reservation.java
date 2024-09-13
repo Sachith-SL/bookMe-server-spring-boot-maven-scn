@@ -1,6 +1,8 @@
 package com.sachith.server.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sachith.server.util.Constant;
+import com.sachith.server.util.Constant.ReservationStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -28,7 +30,9 @@ public class Reservation {
 
     private LocalDate date;
     private Integer amount;
-    private String status; // (PENDING, CONFIRMED, IN_PROGRESS, COMPLETED)
+
+    @Enumerated(EnumType.STRING)
+    private ReservationStatus status; // (PENDING, CONFIRMED, IN_PROGRESS, COMPLETED)
 
     public Long getId() {
         return id;
@@ -54,11 +58,11 @@ public class Reservation {
         this.amount = amount;
     }
 
-    public String getStatus() {
+    public ReservationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ReservationStatus status) {
         this.status = status;
     }
 

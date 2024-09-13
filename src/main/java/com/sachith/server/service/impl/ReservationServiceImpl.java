@@ -1,6 +1,7 @@
 package com.sachith.server.service.impl;
 
-import com.sachith.server.dto.ReservationDTO;
+import com.sachith.server.dto.ReservationRequestDTO;
+import com.sachith.server.dto.ReservationResponseDTO;
 import com.sachith.server.model.*;
 import com.sachith.server.repository.ReservationRepository;
 import com.sachith.server.repository.ReservationSlotRepository;
@@ -13,9 +14,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
+import static com.sachith.server.util.Constant.*;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -36,12 +41,12 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public Reservation create(ReservationDTO reservationDto) {
+    public Reservation create(ReservationRequestDTO reservationRequestDto) {
         try {
             Boolean bookingSlotsAvalability =false;
-            Optional<User> user = userRepository.findById(reservationDto.getUserId());
+            Optional<User> user = userRepository.findById(reservationRequestDto.getUserId());
             List<Slot> newSlots = new ArrayList<>();
-            for(Long id:reservationDto.getSlotsIds()){
+            for(Long id: reservationRequestDto.getSlotsIds()){
                 Optional<Slot> slot = slotRepository.findById(id);
                 newSlots.add(slot.get());
             }
@@ -52,7 +57,7 @@ public class ReservationServiceImpl implements ReservationService {
             for(Slot slot: newSlots){
                 if(slot.getId() != null){
                     Slot existingSlot = slotRepository.findById(slot.getId()).get();
-                    if(existingSlot.getAvailable() == true && existingSlot.getDate().equals(reservationDto.getDate())){
+                    if(existingSlot.getAvailable() == true && existingSlot.getDate().equals(reservationRequestDto.getDate())){
                         bookingSlots.add(existingSlot);
                         bookingSlotsAvalability=true;
                         totalAmount +=existingSlot.getUnitPrice();
@@ -64,13 +69,13 @@ public class ReservationServiceImpl implements ReservationService {
 
             Reservation reservation = new Reservation();
 
-            if(reservationDto.getTransaction() ==null){
+            if(reservationRequestDto.getTransaction() ==null){
                 reservation.setTransaction(new Transaction());
             }
             reservation.setUser(user.get());
-            reservation.setDate(reservationDto.getDate());
+            reservation.setDate(reservationRequestDto.getDate());
             reservation.setAmount(totalAmount);
-            reservation.setStatus(reservationDto.getStatus());
+            reservation.setStatus(checkAndSetStatus(reservationRequestDto.getStatus()));
             Reservation createdReservation = reservationRepository.save(reservation);
 
             for(Slot slot:bookingSlots){
@@ -88,11 +93,11 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Reservation> readAll() {
+    public List<ReservationResponseDTO> readAll() {
 
         try{
             List<Reservation> list = reservationRepository.findAll();
-            return list;
+            return getDto(list);
         } catch (Exception e){
             return null;
         }
@@ -119,22 +124,27 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<Reservation> reservationByUserId(Long id) {
+    public List<ReservationResponseDTO> reservationByUserId(Long id) {
         List<Reservation> reservationList = new ArrayList<>();
         try {
             Optional<User> optionalUser = userRepository.findById(id);
-            User user = optionalUser.isPresent()? optionalUser.get() : null;
+            User user = optionalUser.orElse(null);
 
             if (user !=null){
                 reservationList =reservationRepository.findByUser(user);
             }
+
+            if(!reservationList.isEmpty()){
+                return getDto(reservationList);
+            }
+
 
         } catch (Exception ex){
             logger.error("",ex);
         }
 
 
-        return reservationList;
+        return Collections.emptyList();
     }
 
     @Override
@@ -155,7 +165,7 @@ public class ReservationServiceImpl implements ReservationService {
             Optional<Reservation> optionalReservation = reservationRepository.findById(id);
             if (optionalReservation.isPresent()) {
                 Reservation oldReservation = optionalReservation.get();
-                oldReservation.setStatus(status);
+                oldReservation.setStatus(checkAndSetStatus(status));
                 updatedReservation = reservationRepository.save(oldReservation);
             }
         } catch (Exception ex) {
@@ -164,5 +174,38 @@ public class ReservationServiceImpl implements ReservationService {
         return updatedReservation;
     }
 
+    private ReservationStatus checkAndSetStatus(String status){
+        return switch (status) {
+            case "CONFIRMED" -> ReservationStatus.CONFIRMED;
+            case "IN_PROGRESS" -> ReservationStatus.IN_PROGRESS;
+            case "COMPLETED" -> ReservationStatus.COMPLETED;
+            default -> ReservationStatus.PENDING;
+        };
+    }
+
+    private List<ReservationResponseDTO> getDto(List<Reservation> list){
+        List<ReservationResponseDTO> responseDTOList = new ArrayList<>();
+
+
+        for(Reservation reservation: list){
+            ReservationResponseDTO responseDTO = new ReservationResponseDTO();
+            responseDTO.setTransaction(reservation.getTransaction());
+            responseDTO.setUserId(reservation.getUser().getId());
+
+            responseDTO.setDate(reservation.getDate());
+            responseDTO.setAmount(reservation.getAmount());
+            responseDTO.setStatus(reservation.getStatus().getValue());
+
+            List<ReservationSlot> reservationSlotList = reservationSlotRepository.findReservationSlotByReservation(reservation);
+            List<Slot> slotList = new ArrayList<>();
+            for(ReservationSlot reservationSlot:reservationSlotList){
+                slotList.add(reservationSlot.getSlot());
+            }
+            responseDTO.setSlots(slotList);
+            responseDTOList.add(responseDTO);
+        }
+
+        return responseDTOList;
+    }
 
 }

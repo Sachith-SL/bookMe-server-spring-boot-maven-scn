@@ -1,18 +1,17 @@
 package com.sachith.server.controller;
 
 
-import com.sachith.server.dto.ReservationDTO;
+import com.sachith.server.dto.ReservationRequestDTO;
+import com.sachith.server.dto.ReservationResponseDTO;
 import com.sachith.server.dto.ResponseDTO;
 import com.sachith.server.model.Reservation;
 
 import com.sachith.server.model.Transaction;
-import com.sachith.server.model.User;
 import com.sachith.server.service.ReservationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,10 +28,10 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @PostMapping()
-    public ResponseDTO create(@RequestBody ReservationDTO reservationDto) {
+    public ResponseDTO create(@RequestBody ReservationRequestDTO reservationRequestDto) {
         ResponseDTO responseDTO = new ResponseDTO();
 
-        Object data  = reservationService.create(reservationDto);
+        Object data  = reservationService.create(reservationRequestDto);
         responseDTO.setData(data);
         if(data!=null){
             responseDTO.setStatus("SUCCESS");
@@ -46,9 +45,9 @@ public class ReservationController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Reservation>> readAll() {
+    public ResponseEntity<List<ReservationResponseDTO>> readAll() {
         try{
-            List<Reservation> list = reservationService.readAll();
+            List<ReservationResponseDTO> list = reservationService.readAll();
             return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (Exception ex){
             logger.error("",ex);
@@ -62,10 +61,10 @@ public class ReservationController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<List<Reservation>> reservationByUserId(@PathVariable Long id) {
+    public ResponseEntity<List<ReservationResponseDTO>> reservationByUserId(@PathVariable Long id) {
 
         try{
-            List<Reservation> list = reservationService.reservationByUserId(id);
+            List<ReservationResponseDTO> list = reservationService.reservationByUserId(id);
             return new ResponseEntity<>(list, HttpStatus.OK);
         } catch (Exception ex){
             logger.error("",ex);
