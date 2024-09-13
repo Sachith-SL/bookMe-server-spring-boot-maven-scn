@@ -1,15 +1,11 @@
 package com.sachith.server.dto;
 
-import com.sachith.server.model.ReservationSlot;
-import com.sachith.server.model.Slot;
 import com.sachith.server.model.Transaction;
-import com.sachith.server.model.User;
-import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class ReservationDTO {
+public class ReservationRequestDTO {
 
     private Transaction transaction;
     private  Long userId;

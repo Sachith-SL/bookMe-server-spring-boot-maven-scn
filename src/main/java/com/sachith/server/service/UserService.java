@@ -25,5 +25,7 @@ public interface UserService {
 
     public User updateMobileById(Long id,String mobile) ;
 
+    public Boolean checkUserAvailabilityByMobile(String mobile);
+
 
 }

@@ -41,6 +41,10 @@ public class UserController {
     public Long readCountByName(@RequestParam(value = "name", required = false) String name) {
         return userService.readCountByName(name);
     }
+    @GetMapping("/login/{mobile}")
+    public Boolean checkUserAvailabilityByMobile(@PathVariable String mobile){
+        return userService.checkUserAvailabilityByMobile(mobile);
+            }
 
     @PutMapping("/{id}")
     public User updateById(@PathVariable Long id, @RequestBody User user) {

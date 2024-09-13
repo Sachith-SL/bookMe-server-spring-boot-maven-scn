@@ -12,7 +12,7 @@ public class ReservationSlot {
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "slot_id")
     private Slot slot;
 

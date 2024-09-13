@@ -1,6 +1,8 @@
 package com.sachith.server.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sachith.server.util.Constant;
+import com.sachith.server.util.Constant.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Setter;
@@ -19,9 +21,14 @@ public class User {
     @JsonIgnore
     private List<Reservation> reservationList;
 
+    @Column(unique = true)
     String mobile;
+
     Character isLoyalty; // ("N","Y")
-    String role; //(ADMIN,CUSTOMER)
+
+    @Enumerated(EnumType.STRING)
+    UserRole role; //(ADMIN,CUSTOMER)
+
     String password;
 
     public Long getId() {
@@ -48,11 +55,11 @@ public class User {
         this.mobile = mobile;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 

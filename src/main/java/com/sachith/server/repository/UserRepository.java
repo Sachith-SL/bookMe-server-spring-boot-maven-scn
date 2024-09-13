@@ -13,4 +13,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     public List<User> findByMobile(String mobile);
 
     public  Long countByName(String name);
+
+
 }

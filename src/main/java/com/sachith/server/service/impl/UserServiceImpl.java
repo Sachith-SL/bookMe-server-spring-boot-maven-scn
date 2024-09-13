@@ -3,6 +3,8 @@ package com.sachith.server.service.impl;
 import com.sachith.server.model.User;
 import com.sachith.server.repository.UserRepository;
 import com.sachith.server.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
@@ -12,12 +14,20 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
     @Autowired
     private UserRepository userRepository;
 
 
     public User create(User user) {
-        return userRepository.save(user);
+        try {
+            return userRepository.save(user);
+        } catch (Exception ex) {
+            logger.error("", ex);
+            return null;
+        }
+
     }
 
 
@@ -67,5 +77,8 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-
+    @Override
+    public Boolean checkUserAvailabilityByMobile(String mobile) {
+        return !userRepository.findByMobile(mobile).isEmpty();
+    }
 }
