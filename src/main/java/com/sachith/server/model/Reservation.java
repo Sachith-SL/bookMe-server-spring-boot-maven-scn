@@ -1,8 +1,7 @@
 package com.sachith.server.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sachith.server.util.Constant;
-import com.sachith.server.util.Constant.ReservationStatus;
+import com.sachith.server.constraint.Constant.ReservationStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

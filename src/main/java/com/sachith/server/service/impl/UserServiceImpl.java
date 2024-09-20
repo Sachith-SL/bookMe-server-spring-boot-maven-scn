@@ -1,17 +1,20 @@
 package com.sachith.server.service.impl;
 
+import com.sachith.server.dto.UserDTO;
 import com.sachith.server.model.User;
 import com.sachith.server.repository.UserRepository;
 import com.sachith.server.service.UserService;
+import com.sachith.server.constraint.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 @Service
+
 public class UserServiceImpl implements UserService {
 
     Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -19,9 +22,24 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-    public User create(User user) {
+    public User create(UserDTO userDto) {
         try {
+            User user = new User();
+            String name;
+            String mobile;
+            Character isLoyalty; // ("N","Y")
+            String role; //(ADMIN,CUSTOMER)
+            String password;
+
+            user.setName(userDto.getName());
+            user.setMobile(userDto.getMobile());
+            user.setIsLoyalty(userDto.getIsLoyalty());
+            user.setRole(Constant.UserRole.valueOf(userDto.getRole().toUpperCase()));
+            user.setPassword(encoder.encode(userDto.getPassword()));
+
+
             return userRepository.save(user);
         } catch (Exception ex) {
             logger.error("", ex);
@@ -41,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public List<User> readByName(String name) {
+    public User readByName(String name) {
         return userRepository.findByName(name);
     }
 

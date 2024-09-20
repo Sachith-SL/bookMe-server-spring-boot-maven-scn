@@ -1,5 +1,6 @@
 package com.sachith.server.controller;
 
+import com.sachith.server.dto.UserDTO;
 import com.sachith.server.model.User;
 import com.sachith.server.repository.UserRepository;
 import com.sachith.server.service.UserService;
@@ -18,7 +19,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping()
-    public User create(@RequestBody User user) {
+    public User create(@RequestBody UserDTO user) {
         return userService.create(user);
     }
 
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/name")
-    public List<User> readByName(@RequestParam(value = "name", required = false) String name) {
+    public  User readByName(@RequestParam(value = "name", required = false) String name) {
         return userService.readByName(name);
     }
 

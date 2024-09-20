@@ -1,5 +1,6 @@
 package com.sachith.server.service;
 
+import com.sachith.server.dto.UserDTO;
 import com.sachith.server.model.User;
 import org.springframework.stereotype.Service;
 
@@ -9,13 +10,13 @@ import java.util.Optional;
 
 public interface UserService {
 
-    public User create(User user) ;
+    public User create(UserDTO user) ;
 
     public List<User> readAll() ;
 
     public Optional<User> readById(Long id) ;
 
-    public List<User> readByName(String name) ;
+    public User readByName(String name) ;
 
     public Long readCountByName(String name) ;
 

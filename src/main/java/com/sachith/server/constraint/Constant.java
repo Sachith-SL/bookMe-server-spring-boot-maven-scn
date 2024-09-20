@@ -1,4 +1,4 @@
-package com.sachith.server.util;
+package com.sachith.server.constraint;
 
 public class Constant {
 
