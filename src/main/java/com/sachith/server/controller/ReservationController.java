@@ -29,19 +29,7 @@ public class ReservationController {
 
     @PostMapping()
     public ResponseDTO create(@RequestBody ReservationRequestDTO reservationRequestDto) {
-        ResponseDTO responseDTO = new ResponseDTO();
-
-        Object data  = reservationService.create(reservationRequestDto);
-        responseDTO.setData(data);
-        if(data!=null){
-            responseDTO.setStatus("SUCCESS");
-            responseDTO.setDescription("Successful");
-        } else{
-            responseDTO.setStatus("ERROR");
-            responseDTO.setDescription("Error");
-        }
-        return responseDTO;
-
+        return reservationService.create(reservationRequestDto);
     }
 
     @GetMapping()
@@ -71,6 +59,7 @@ public class ReservationController {
             return new ResponseEntity<>(null, HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
+
     @GetMapping("/status/{status}")
     public ResponseEntity<List<Reservation>> reservationByStatus(@PathVariable String status) {
         try{

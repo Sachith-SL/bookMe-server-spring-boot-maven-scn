@@ -80,8 +80,11 @@ public class SlotServiceImpl implements SlotService {
 
     @Override
     public List<Slot> availableSlotsByDate(String dateString) {
+        return slotRepository. findByIsAvailableAndDate(true,formatDate(dateString));
+    }
+
+    private LocalDate formatDate(String dateStr){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");//2024-08-12
-        LocalDate date = LocalDate.parse(dateString, formatter);
-        return slotRepository.findByIsAvailableAndDate(true,date);
+        return LocalDate.parse(dateStr, formatter);
     }
 }

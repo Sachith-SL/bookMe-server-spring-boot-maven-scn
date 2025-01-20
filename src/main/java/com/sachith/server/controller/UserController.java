@@ -18,8 +18,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping()
-    public User create(@RequestBody UserDTO user) {
+    @PostMapping("/register")
+    public User register(@RequestBody UserDTO user) {
+        return userService.create(user);
+    }
+
+    @PostMapping("/login")
+    public User login(@RequestBody UserDTO user) {
         return userService.create(user);
     }
 

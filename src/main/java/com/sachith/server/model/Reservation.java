@@ -3,6 +3,9 @@ package com.sachith.server.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sachith.server.constraint.Constant.ReservationStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,6 +35,10 @@ public class Reservation {
 
     @Enumerated(EnumType.STRING)
     private ReservationStatus status; // (PENDING, CONFIRMED, IN_PROGRESS, COMPLETED)
+    @CreationTimestamp(source = SourceType.DB)
+    private LocalDate createdDate;
+    @UpdateTimestamp(source = SourceType.DB)
+    private LocalDate modifiedDate;
 
     public Long getId() {
         return id;
@@ -87,5 +94,21 @@ public class Reservation {
 
     public void setReservationSlots(List<ReservationSlot> reservationSlots) {
         this.reservationSlots = reservationSlots;
+    }
+
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDate getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(LocalDate modifiedDate) {
+        this.modifiedDate = modifiedDate;
     }
 }

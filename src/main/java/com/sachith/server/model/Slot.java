@@ -10,6 +10,20 @@ import java.util.List;
 @Entity
 @Table(name = "t_slot")
 public class Slot {
+
+    public Slot(){
+    }
+
+    public Slot(Long id, LocalDate date, Integer slotIndex, LocalTime startTime, LocalTime endTime, Integer unitPrice, Boolean isAvailable) {
+        this.id = id;
+        this.date = date;
+        this.slotIndex = slotIndex;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.unitPrice = unitPrice;
+        this.isAvailable = isAvailable;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;

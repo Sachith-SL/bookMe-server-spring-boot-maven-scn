@@ -22,7 +22,9 @@ public class Constant {
         PENDING("PENDING"),
         CONFIRMED("CONFIRMED"),
         IN_PROGRESS("IN_PROGRESS"),
-        COMPLETED("COMPLETED");
+        COMPLETED("COMPLETED"),
+        CANCELED("CANCELED"),
+        UNKNOWN("UNKNOWN");
 
         private final String value;
 
@@ -33,5 +35,21 @@ public class Constant {
         public String getValue() {
             return value;
         }
+    }
+
+    public enum ResponseStatus {
+        SUCCESS("SUCCESS"),
+        ERROR("ERROR");
+
+        private final String value;
+
+        ResponseStatus(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
     }
 }

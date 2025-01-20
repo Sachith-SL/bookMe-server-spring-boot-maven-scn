@@ -2,6 +2,8 @@ package com.sachith.server.service.impl;
 
 import com.sachith.server.dto.ReservationRequestDTO;
 import com.sachith.server.dto.ReservationResponseDTO;
+import com.sachith.server.dto.ResponseDTO;
+import com.sachith.server.exception.UserNotFountException;
 import com.sachith.server.model.*;
 import com.sachith.server.repository.ReservationRepository;
 import com.sachith.server.repository.ReservationSlotRepository;
@@ -40,13 +42,27 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public Reservation create(ReservationRequestDTO reservationRequestDto) {
+    public ResponseDTO create(ReservationRequestDTO reservationRequestDto) {
+        ResponseDTO responseDTO = new ResponseDTO();
         try {
             Boolean bookingSlotsAvalability =false;
+
+            //find user
             Optional<User> user = userRepository.findById(reservationRequestDto.getUserId());
+
+            //if user not found return exception
+            if (!user.isPresent()){
+                throw new UserNotFountException("User not found for id: "+ reservationRequestDto.getUserId());
+            }
+
             List<Slot> newSlots = new ArrayList<>();
+            //find slots
             for(Long id: reservationRequestDto.getSlotsIds()){
                 Optional<Slot> slot = slotRepository.findById(id);
+                //if slot not found return exception
+                if (!slot.isPresent()){
+                    throw new UserNotFountException("Slot not found for id: "+ id);
+                }
                 newSlots.add(slot.get());
             }
 
@@ -56,10 +72,12 @@ public class ReservationServiceImpl implements ReservationService {
             for(Slot slot: newSlots){
                 if(slot.getId() != null){
                     Slot existingSlot = slotRepository.findById(slot.getId()).get();
-                    if(existingSlot.getAvailable() == true && existingSlot.getDate().equals(reservationRequestDto.getDate())){
+                    if(existingSlot.getAvailable() && existingSlot.getDate().equals(reservationRequestDto.getDate())){
                         bookingSlots.add(existingSlot);
                         bookingSlotsAvalability=true;
                         totalAmount +=existingSlot.getUnitPrice();
+                    } else {
+                        //todo:check
                     }
                 }
             }
@@ -85,10 +103,19 @@ public class ReservationServiceImpl implements ReservationService {
                 reservationSlot.setSlot(slot);
                 reservationSlotRepository.save(reservationSlot);
             }
-            return createdReservation;
-        } catch (Exception e) {
-            return null;
+            responseDTO.setData(createdReservation);
+            responseDTO.setStatus(ResponseStatus.SUCCESS.getValue());
+            responseDTO.setDescription("creation is successful");
         }
+        catch (UserNotFountException e){
+            responseDTO.setStatus(ResponseStatus.ERROR.getValue());
+            responseDTO.setDescription(e.getMessage());
+        }
+        catch (Exception e) {
+            responseDTO.setStatus(ResponseStatus.ERROR.getValue());
+            responseDTO.setDescription(e.getMessage());
+        }
+        return responseDTO;
     }
 
     @Override
@@ -178,7 +205,9 @@ public class ReservationServiceImpl implements ReservationService {
             case "CONFIRMED" -> ReservationStatus.CONFIRMED;
             case "IN_PROGRESS" -> ReservationStatus.IN_PROGRESS;
             case "COMPLETED" -> ReservationStatus.COMPLETED;
-            default -> ReservationStatus.PENDING;
+            case "PENDING" -> ReservationStatus.PENDING;
+            case "CANCELED" -> ReservationStatus.CANCELED;
+            default -> ReservationStatus.UNKNOWN;
         };
     }
 
