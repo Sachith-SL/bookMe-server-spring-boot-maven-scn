@@ -1,21 +1,44 @@
 package com.sachith.server.controller;
 
 import com.sachith.server.model.User;
-import com.sachith.server.repository.UserRepository;
 import com.sachith.server.service.UserService;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @CrossOrigin()
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
     private UserService userService;
+
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+
+//    @Autowired
+//    public UserController(UserService userService){
+//        this.userService=userService;
+//    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    @PostConstruct
+    public void init() {
+        logger.info("UserController: Initialization Logic");
+    }
+
+    @PreDestroy
+    public void cleanup() {
+        logger.info("UserController: Cleanup Logic");
+    }
 
     @GetMapping()
     public List<User> readAll() {
@@ -46,8 +69,6 @@ public class UserController {
     public void deleteById(@PathVariable Long id) {
         userService.deleteById(id);
     }
-
-
 
 
 }
