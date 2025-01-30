@@ -20,15 +20,21 @@ public class UserController {
 
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    /*constructor injection*/
 //    @Autowired
 //    public UserController(UserService userService){
 //        this.userService=userService;
 //    }
 
+
+    /* setter injection */
+
     @Autowired
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
+
+    /*these are the method to handle bean life cycle*/
 
     @PostConstruct
     public void init() {
@@ -39,6 +45,8 @@ public class UserController {
     public void cleanup() {
         logger.info("UserController: Cleanup Logic");
     }
+
+    /*these are the crud related end points*/
 
     @GetMapping()
     public List<User> readAll() {
