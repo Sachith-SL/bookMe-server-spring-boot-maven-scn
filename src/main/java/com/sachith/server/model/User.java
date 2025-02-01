@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -16,6 +17,12 @@ public class User {
     String name;
     String mobile;
     Character isLoyalty; //(Y,N)
+
+//    todo: add these datatype and extend this
+//    LocalDate dob
+//    boolean isOk
+//        double salary
+
 
     public Long getId() {
         return id;
